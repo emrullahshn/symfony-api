@@ -37,7 +37,7 @@ class RedisService
      * @param string $value
      * @param int $expireTime
      */
-    public function set(string $key, string $value, $expireTime = 360): void
+    public function set(string $key, string $value, $expireTime = 300): void
     {
         $this->client->set($key, $value, 'EX', $expireTime);
     }
