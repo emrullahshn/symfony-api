@@ -44,6 +44,13 @@ class UserController extends Controller
          */
         $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
+        if ($user === null){
+            return new JsonResponse(
+                ['errorMessage' => 'User not found!'],
+                JsonResponse::HTTP_NOT_FOUND
+            );
+        }
+
         $isPasswordValid = $passwordEncoder->isPasswordValid($user, $password);
 
         if ($isPasswordValid === false) {

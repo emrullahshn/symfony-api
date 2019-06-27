@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:edge
 
 LABEL maintainer="Janosch Kocsis <jk@coloso.de>"
 
@@ -32,7 +32,14 @@ RUN apk add --update \
     make \
     curl \
     nodejs \
-    yarn
+    yarn \
+    g++
+
+ENV     C_INCLUDE_PATH /usr/include/glib-2.0:/usr/lib/glib-2.0/include
+RUN     apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing \
+        vips-tools vips-dev glib-dev php7-dev php7-pear build-base libxml2-dev
+
+RUN pecl install -o -f redis && rm -rf /tmp/pear
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/* && \
     curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
