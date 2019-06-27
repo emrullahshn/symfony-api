@@ -13,7 +13,10 @@
 
 run docker and connect to container:
 ```
- docker-compose up --build
+ docker-compose build
+```
+```
+ docker-compose up -d
 ```
 ```
  docker-compose exec php sh

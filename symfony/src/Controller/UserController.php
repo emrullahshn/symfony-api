@@ -62,7 +62,7 @@ class UserController extends Controller
 
         $apiToken = Utils::generateToken();
 
-        $redisService->set($apiToken, $user->getId(), 30);
+        $redisService->set($apiToken, $user->getId());
 
         $entityManager->flush();
 
