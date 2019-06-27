@@ -34,21 +34,6 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\ApiToken", mappedBy="user")
-     */
-    private $apiTokens;
-
-    /**
-     * User constructor.
-     * @param $apiTokens
-     */
-    public function __construct()
-    {
-        $this->apiTokens = new ArrayCollection();
-    }
-
-
     public function getId(): ?int
     {
         return $this->id;
@@ -125,21 +110,5 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApiTokens()
-    {
-        return $this->apiTokens;
-    }
-
-    /**
-     * @param mixed $apiTokens
-     */
-    public function setApiTokens($apiTokens): void
-    {
-        $this->apiTokens = $apiTokens;
     }
 }

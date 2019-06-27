@@ -4,9 +4,11 @@ namespace App\Security;
 
 use App\Entity\ApiToken;
 use App\Entity\User;
+use App\Service\RedisService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Predis\Client;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,9 +23,15 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /**
+     * @var RedisService $redisService
+     */
+    private $redisService;
+
+    public function __construct(EntityManagerInterface $em, RedisService $redisService)
     {
         $this->em = $em;
+        $this->redisService = $redisService;
     }
 
     /**
@@ -71,23 +79,18 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             );
         }
 
-        $apiTokenEntity = $this->em->getRepository(ApiToken::class)
-            ->findOneBy(['token' => $apiToken]);
+        $userId = $this->redisService->get($apiToken);
 
-        if ($apiTokenEntity === null) {
+        if($userId === null){
             throw new CustomUserMessageAuthenticationException(
                 'Invalid Token!'
             );
         }
 
-        if ($apiTokenEntity->getExpiresAt() <= new DateTime()) {
-            throw new CustomUserMessageAuthenticationException(
-                'Token Expired'
-            );
-        }
+        $user = $this->em->getRepository(User::class)->find((int) $userId);
 
         // if a User object, checkCredentials() is called
-        return $apiTokenEntity->getUser();
+        return $user;
     }
 
     /**
