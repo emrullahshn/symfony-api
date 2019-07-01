@@ -38,3 +38,9 @@ DATABASE_URL=mysql://root:root@mysql:3306/symfony
 
 call localhost in your browser:
 - [http://localhost](http://localhost/)
+
+### Notlar
+
+- Redis host/port static yazılmış. .env'ye yazılıp DependencyInjection ile inject etmek daha doğru.
+- Password kontrolü UserController içinde yapılmış. TokenAuth'da yapmak daha doğru çünkü hem bunun için bir metod var hemde elimizde User var. Tekrar db'ye gitmeye gerek yok.
+- Errorlar için bir service yazıalbilir "message" ve "statusCode" alacak şekilde.
